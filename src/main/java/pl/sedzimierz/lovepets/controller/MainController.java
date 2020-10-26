@@ -9,7 +9,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class MainController {
 
     @GetMapping
-    public String getIndex() {
+    public String getIndexPage() {
         return "index";
+    }
+
+    @GetMapping("/about")
+    public String getAboutPage() {
+        return "about";
+    }
+
+    @GetMapping("/support")
+    public String getSupportPage() {
+        return "support";
     }
 }
