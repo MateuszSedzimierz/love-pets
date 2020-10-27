@@ -1,6 +1,8 @@
 package pl.sedzimierz.lovepets.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.util.Objects;
 
@@ -17,6 +19,8 @@ public class Pet {
     @JoinColumn(name = "pet_type_id")
     private PetType petType;
 
+    @NotNull
+    @Size(min = 1)
     @Column(name = "name")
     private String name;
 
@@ -32,6 +36,14 @@ public class Pet {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "pet_details_id", unique = true)
     private PetDetails petDetails;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User owner;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", unique = true)
+    private Address address;
 
     public Pet() {
     }
@@ -90,6 +102,22 @@ public class Pet {
 
     public void setPetDetails(PetDetails petDetails) {
         this.petDetails = petDetails;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     @Override
