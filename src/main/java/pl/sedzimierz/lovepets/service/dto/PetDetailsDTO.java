@@ -78,4 +78,16 @@ public class PetDetailsDTO {
     public void setSterilized(boolean sterilized) {
         this.sterilized = sterilized;
     }
+
+    @Override
+    public String toString() {
+        return "PetDetailsDTO {" +
+                "id: " + id +
+                ", description: '" + description + '\'' +
+                ", gender: " + gender +
+                ", size: " + size +
+                ", age: " + age +
+                ", sterilized: " + sterilized +
+                '}';
+    }
 }

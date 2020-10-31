@@ -92,4 +92,16 @@ public class Address {
         address.setStreetAddress(streetAddress);
         return address;
     }
+
+    @Override
+    public String toString() {
+        return "Address {" +
+                "id: " + id +
+                ", country: '" + country + '\'' +
+                ", city: '" + city + '\'' +
+                ", state: '" + state + '\'' +
+                ", zipCode: '" + zipCode + '\'' +
+                ", streetAddress: '" + streetAddress + '\'' +
+                '}';
+    }
 }

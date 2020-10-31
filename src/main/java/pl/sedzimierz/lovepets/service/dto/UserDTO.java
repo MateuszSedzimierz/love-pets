@@ -6,6 +6,7 @@ import pl.sedzimierz.lovepets.model.User;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -28,6 +29,14 @@ public class UserDTO {
 
     private AddressDTO addressDTO;
 
+    private String createdBy;
+
+    private Instant createdDate;
+
+    private String lastModifiedBy;
+
+    private Instant lastModifiedDate;
+
     private Set<String> authorities;
 
     public UserDTO() {
@@ -41,6 +50,10 @@ public class UserDTO {
         this.email = user.getEmail();
         this.phoneNumber = user.getPhoneNumber();
         this.addressDTO = new AddressDTO(user.getAddress());
+        this.createdBy = user.getCreatedBy();
+        this.createdDate = user.getCreatedDate();
+        this.lastModifiedBy = user.getLastModifiedBy();
+        this.lastModifiedDate = user.getLastModifiedDate();
         this.authorities = user.getAuthorities().stream()
                 .map(Authority::getName)
                 .collect(Collectors.toSet());
@@ -102,11 +115,61 @@ public class UserDTO {
         this.addressDTO = addressDTO;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
     public Set<String> getAuthorities() {
         return authorities;
     }
 
     public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDTO {" +
+                "id: " + id +
+                ", login: '" + login + '\'' +
+                ", firstName: '" + firstName + '\'' +
+                ", lastName: '" + lastName + '\'' +
+                ", email: '" + email + '\'' +
+                ", phoneNumber: '" + phoneNumber + '\'' +
+                ", addressDTO: " + addressDTO +
+                ", createdBy: '" + createdBy + '\'' +
+                ", createdDate: " + createdDate +
+                ", lastModifiedBy: '" + lastModifiedBy + '\'' +
+                ", lastModifiedDate: " + lastModifiedDate +
+                ", authorities: " + authorities +
+                '}';
     }
 }

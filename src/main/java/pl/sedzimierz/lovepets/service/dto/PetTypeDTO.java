@@ -31,4 +31,12 @@ public class PetTypeDTO {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "PetTypeDTO {" +
+                "id: " + id +
+                ", name: '" + name + '\'' +
+                '}';
+    }
 }

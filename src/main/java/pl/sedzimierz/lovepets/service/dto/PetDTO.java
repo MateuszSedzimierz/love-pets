@@ -24,9 +24,17 @@ public class PetDTO {
 
     private PetDetailsDTO petDetailsDTO;
 
-    private UserDTO owner;
+    private UserDTO ownerDTO;
 
     private AddressDTO address;
+
+    private String createdBy;
+
+    private Instant createdDate;
+
+    private String lastModifiedBy;
+
+    private Instant lastModifiedDate;
 
     public PetDTO() {
     }
@@ -39,8 +47,12 @@ public class PetDTO {
         this.adoptionDate = pet.getAdoptionDate();
         this.imageUrl = pet.getImageUrl();
         this.petDetailsDTO = new PetDetailsDTO(pet.getPetDetails());
-        this.owner = new UserDTO(pet.getOwner());
+        this.ownerDTO = new UserDTO(pet.getOwner());
         this.address = new AddressDTO(pet.getAddress());
+        this.createdBy = pet.getCreatedBy();
+        this.createdDate = pet.getCreatedDate();
+        this.lastModifiedBy = pet.getLastModifiedBy();
+        this.lastModifiedDate = pet.getLastModifiedDate();
     }
 
     public Long getId() {
@@ -99,12 +111,12 @@ public class PetDTO {
         this.petDetailsDTO = petDetailsDTO;
     }
 
-    public UserDTO getOwner() {
-        return owner;
+    public UserDTO getOwnerDTO() {
+        return ownerDTO;
     }
 
-    public void setOwner(UserDTO owner) {
-        this.owner = owner;
+    public void setOwner(UserDTO ownerDTO) {
+        this.ownerDTO = ownerDTO;
     }
 
     public AddressDTO getAddress() {
@@ -113,5 +125,60 @@ public class PetDTO {
 
     public void setAddress(AddressDTO address) {
         this.address = address;
+    }
+
+    public void setOwnerDTO(UserDTO ownerDTO) {
+        this.ownerDTO = ownerDTO;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    @Override
+    public String toString() {
+        return "PetDTO {" +
+                "id: " + id +
+                ", petTypeDTO: " + petTypeDTO +
+                ", name: '" + name + '\'' +
+                ", adopted: " + adopted +
+                ", adoptionDate: " + adoptionDate +
+                ", imageUrl: '" + imageUrl + '\'' +
+                ", petDetailsDTO: " + petDetailsDTO +
+                ", ownerDTO: " + ownerDTO +
+                ", address: " + address +
+                ", createdBy: '" + createdBy + '\'' +
+                ", createdDate: " + createdDate +
+                ", lastModifiedBy: '" + lastModifiedBy + '\'' +
+                ", lastModifiedDate: " + lastModifiedDate +
+                '}';
     }
 }

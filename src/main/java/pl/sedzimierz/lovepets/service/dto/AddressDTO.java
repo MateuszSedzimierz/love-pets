@@ -82,4 +82,16 @@ public class AddressDTO {
     public void setStreetAddress(String streetAddress) {
         this.streetAddress = streetAddress;
     }
+
+    @Override
+    public String toString() {
+        return "AddressDTO {" +
+                "id: " + id +
+                ", country: '" + country + '\'' +
+                ", city: '" + city + '\'' +
+                ", state: '" + state + '\'' +
+                ", zipCode: '" + zipCode + '\'' +
+                ", streetAddress: '" + streetAddress + '\'' +
+                '}';
+    }
 }

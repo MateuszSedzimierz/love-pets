@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User extends AbstractAuditingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -139,5 +139,20 @@ public class User {
 
     public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
+    }
+
+    @Override
+    public String toString() {
+        return "User {" +
+                "id: " + id +
+                ", login: '" + login + '\'' +
+                ", firstName: '" + firstName + '\'' +
+                ", lastName: '" + lastName + '\'' +
+                ", email: '" + email + '\'' +
+                ", phoneNumber: '" + phoneNumber + '\'' +
+                ", address: " + address +
+                ", petsNumber: " + pets.size() +
+                ", authorities: " + authorities +
+                '}';
     }
 }

@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "pets")
-public class Pet {
+public class Pet extends AbstractAuditingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -137,5 +137,20 @@ public class Pet {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Pet {" +
+                "id: " + id +
+                ", petType: " + petType +
+                ", name: '" + name + '\'' +
+                ", adopted: " + adopted +
+                ", adoptionDate: " + adoptionDate +
+                ", imageUrl: '" + imageUrl + '\'' +
+                ", petDetails: " + petDetails +
+                ", owner: " + owner +
+                ", address: " + address +
+                '}';
     }
 }

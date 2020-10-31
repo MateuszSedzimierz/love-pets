@@ -16,4 +16,9 @@ public enum GenderType {
     public String getDisplayValue() {
         return displayValue;
     }
+
+    @Override
+    public String toString() {
+        return displayValue;
+    }
 }

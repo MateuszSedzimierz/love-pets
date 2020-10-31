@@ -34,4 +34,12 @@ public class Authority {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "Authority {" +
+                "id: " + id +
+                ", name: '" + name + '\'' +
+                '}';
+    }
 }

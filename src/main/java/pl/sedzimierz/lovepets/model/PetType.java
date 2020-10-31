@@ -32,4 +32,12 @@ public class PetType {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "PetType {" +
+                "id: " + id +
+                ", name: '" + name + '\'' +
+                '}';
+    }
 }
