@@ -14,4 +14,14 @@ public class AccountController {
         model.addAttribute("password", "");
         return "userRegistration";
     }
+
+    @GetMapping("/login")
+    public String getLoginForm() {
+        return "login";
+    }
+
+    @GetMapping("/access-denied")
+    public String getAccessDeniedPage() {
+        return "accessDenied";
+    }
 }
