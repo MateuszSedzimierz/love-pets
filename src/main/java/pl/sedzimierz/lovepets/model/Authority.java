@@ -13,7 +13,7 @@ public class Authority {
     private Long id;
 
     @NotNull
-    @Column(name = "name")
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
     public Authority() {
