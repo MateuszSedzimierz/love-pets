@@ -11,7 +11,7 @@ public class PetTypeDTO {
     private Long id;
 
     @NotBlank
-    @Size(min = 1)
+    @Size(min = 3)
     private String name;
 
     private String createdBy;
@@ -47,7 +47,11 @@ public class PetTypeDTO {
     }
 
     public void setName(String name) {
-        this.name = name;
+        if (name == null || name.length() < 2) {
+            this.name = "Empty";
+        } else {
+            this.name = name.toUpperCase().charAt(0) + name.toLowerCase().substring(1);
+        }
     }
 
     public String getCreatedBy() {

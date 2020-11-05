@@ -1,8 +1,11 @@
 package pl.sedzimierz.lovepets.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -37,5 +40,13 @@ public class PetTypeController {
             redirectAttributes.addFlashAttribute("errorMessage", exc.getMessage());
         }
         return "redirect:/pet-types";
+    }
+
+    @GetMapping("/{petTypeId}")
+    public ResponseEntity<PetTypeDTO> getPetTypeById(@PathVariable Long petTypeId) {
+        return petTypeService
+                    .getPetTypeById(petTypeId)
+                    .map(petTypeDTO -> new ResponseEntity<>(petTypeDTO, HttpStatus.OK))
+                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

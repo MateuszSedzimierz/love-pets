@@ -10,6 +10,7 @@ import pl.sedzimierz.lovepets.service.exception.PetTypeNameAlreadyExistsExceptio
 import pl.sedzimierz.lovepets.service.mapper.PetTypeMapper;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,5 +43,11 @@ public class PetTypeService {
             petTypeRepository.save(petType);
             log.info("Created pet type: {}", petType);
         }
+    }
+
+    public Optional<PetTypeDTO> getPetTypeById(Long id) {
+        return petTypeRepository
+                .findById(id)
+                .map(PetTypeDTO::new);
     }
 }

@@ -9,6 +9,8 @@
   <!-- CSS -->
   <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
   <link th:href="@{/css/modern-business.css}" rel="stylesheet">
+  <link th:href="@{/css/fontello.css}" rel="stylesheet">
+  <link th:href="@{/css/fontello-ie7.css}" rel="stylesheet">
 </head>
 
 <body>
@@ -28,7 +30,7 @@
       <li class="breadcrumb-item active">Pet Types Management</li>
     </ol>
 
-    <button type="button" class="btn btn-success mb-3" data-toggle="modal" data-target="#addPetTypeModal" title="Add new pet type">New</button>
+    <button type="button" class="btn btn-info mb-3" data-toggle="modal" data-target="#addPetTypeModal" title="Add new pet type"><i class="icon-plus-circled"></i></button>
 
     <div th:if="${successMessage}" class="alert alert-success col-xs-offset-1 col-xs-10">
       <span th:text="${successMessage}"></span>
@@ -58,9 +60,9 @@
 
             <td class="align-middle">
               <div class="btn-group">
-                <button id="petTypeDetailsButton" th:href="@{${'/pet-types/' + petTypeDTO.id}}" class="btn btn-primary btn-sm" title="Details">Details</button>
-                <button id="petTypeEditButton" th:href="@{${'/pet-types/' + petTypeDTO.id + '/edit'}}" class="btn btn-success btn-sm" title="Update">Edit</button>
-                <button id="petTypeDeleteButton" th:href="@{${'/pet-types/' + petTypeDTO.id + '/delete'}}" class="btn btn-danger btn-sm" title="Delete">Delete</button>
+                <button id="petTypeDetailsButton" th:href="@{${'/pet-types/' + petTypeDTO.id}}" class="btn btn-primary btn-sm" title="Details"><i class="icon-info"></i></button>
+                <button id="petTypeEditButton" th:href="@{${'/pet-types/' + petTypeDTO.id + '/edit'}}" class="btn btn-success btn-sm" title="Update"><i class="icon-cog"></i></button>
+                <button id="petTypeDeleteButton" th:href="@{${'/pet-types/' + petTypeDTO.id + '/delete'}}" class="btn btn-danger btn-sm" title="Delete"><i class="icon-trash"></i></button>
               </div>
             </td>
           </tr>
@@ -79,7 +81,6 @@
     <div class="modal-dialog" role="document">
       <form th:action="@{/pet-types/new}" method="post">
         <div class="modal-content">
-
           <div class="modal-header">
             <h5 class="modal-title">Create Pet Type</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -89,8 +90,8 @@
 
           <div class="modal-body">
             <div class="form-group">
-              <label for="petTypeName" class="col-form-label"> Name:</label>
-              <input type="text" class="form-control" id="petTypeName" name="name" required>
+              <label for="addPetTypeName" class="col-form-label"> Name:</label>
+              <input type="text" class="form-control" id="addPetTypeName" name="name" required minlength="3">
             </div>
           </div>
 
@@ -104,9 +105,62 @@
   </div>
   <!-- /.Add Pet Type Modal-->
 
+  <!-- Details Pet Type Modal -->
+  <div class="modal fade" id="detailsPetTypeModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Pet Type Details</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="petTypeId" class="col-form-label"> Id:</label>
+              <input type="text" class="form-control" id="petTypeId" name="id" readonly>
+            </div>
+
+            <div class="form-group">
+              <label for="petTypeName" class="col-form-label"> Name:</label>
+              <input type="text" class="form-control" id="petTypeName" name="name" readonly>
+            </div>
+
+            <div class="form-group">
+              <label for="petTypeCreatedBy" class="col-form-label"> Created by:</label>
+              <input type="text" class="form-control" id="petTypeCreatedBy" name="createdBy" readonly>
+            </div>
+
+            <div class="form-group">
+              <label for="petTypeCreatedDate" class="col-form-label"> Created date:</label>
+              <input type="text" class="form-control" id="petTypeCreatedDate" name="createdDate" readonly>
+            </div>
+
+            <div class="form-group">
+              <label for="petTypeLastModifiedBy" class="col-form-label"> Last modified by:</label>
+              <input type="text" class="form-control" id="petTypeLastModifiedBy" name="lastModifiedBy" readonly>
+            </div>
+
+            <div class="form-group">
+              <label for="petTypeLastModifiedDate" class="col-form-label"> Last modified date:</label>
+              <input type="text" class="form-control" id="petTypeLastModifiedDate" name="lastModifiedDate" readonly>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+    </div>
+  </div>
+  <!-- /.Details Pet Type Modal-->
+
   <!-- Scripts -->
   <script th:src="@{/js/jquery-3.5.1.min.js}"></script>
   <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+  <script th:src="@{/js/functions.js}"></script>
+  <script th:src="@{/js/petTypes.js}"></script>
 </body>
 
 </html>
