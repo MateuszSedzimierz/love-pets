@@ -32,7 +32,7 @@ public class PetTypeController {
     }
 
     @PostMapping("/new")
-    public String createNewPetType(@Valid PetTypeDTO petTypeDTO, RedirectAttributes redirectAttributes) {
+    public String createPetType(@Valid PetTypeDTO petTypeDTO, RedirectAttributes redirectAttributes) {
         try {
             petTypeService.createPetType(petTypeDTO);
             redirectAttributes.addFlashAttribute("successMessage", "Created new pet type!");
@@ -45,8 +45,28 @@ public class PetTypeController {
     @GetMapping("/{petTypeId}")
     public ResponseEntity<PetTypeDTO> getPetTypeById(@PathVariable Long petTypeId) {
         return petTypeService
-                    .getPetTypeById(petTypeId)
-                    .map(petTypeDTO -> new ResponseEntity<>(petTypeDTO, HttpStatus.OK))
-                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .getPetTypeById(petTypeId)
+                .map(petTypeDTO -> new ResponseEntity<>(petTypeDTO, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping("/edit")
+    public String updatePetType(@Valid PetTypeDTO petTypeDTO, RedirectAttributes redirectAttributes) {
+        try {
+            if (petTypeService.updatePetType(petTypeDTO).isPresent()) {
+                redirectAttributes.addFlashAttribute("successMessage", "Updated pet type!");
+            } else {
+                redirectAttributes.addFlashAttribute("errorMessage", "Incorrect pet type id!");
+            }
+        } catch (PetTypeNameAlreadyExistsException exc) {
+            redirectAttributes.addFlashAttribute("errorMessage", exc.getMessage());
+        }
+        return "redirect:/pet-types";
+    }
+
+    @GetMapping("/{petTypeId}/delete")
+    public String deletePetType(@PathVariable Long petTypeId) {
+        petTypeService.deletePetType(petTypeId);
+        return "redirect:/pet-types";
     }
 }

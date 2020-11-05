@@ -27,7 +27,7 @@ public class PetTypeService {
     }
 
     public List<PetTypeDTO> getAllPetTypes() {
-        return petTypeRepository.findAll()
+        return petTypeRepository.findAllByOrderById()
                 .stream()
                 .map(PetTypeDTO::new)
                 .collect(Collectors.toList());
@@ -35,8 +35,7 @@ public class PetTypeService {
 
     public void createPetType(PetTypeDTO petTypeDTO) {
         String petTypeName = petTypeDTO.getName();
-        if (petTypeRepository.findOneByName(petTypeName).isPresent()) {
-            log.debug("Pet type name '{}' exists in database", petTypeName);
+        if (isPetTypeNamePresent(petTypeName)) {
             throw new PetTypeNameAlreadyExistsException();
         } else {
             PetType petType = petTypeMapper.mapToEntity(petTypeDTO);
@@ -45,9 +44,42 @@ public class PetTypeService {
         }
     }
 
+    private boolean isPetTypeNamePresent(String petTypeName) {
+        if (petTypeRepository.findOneByName(petTypeName).isPresent()) {
+            log.debug("Pet type name '{}' exists in database", petTypeName);
+            return true;
+        }
+        return false;
+    }
+
     public Optional<PetTypeDTO> getPetTypeById(Long id) {
         return petTypeRepository
                 .findById(id)
                 .map(PetTypeDTO::new);
+    }
+
+    public Optional<PetTypeDTO> updatePetType(PetTypeDTO petTypeDTO) {
+        return Optional.of(petTypeRepository
+                .findById(petTypeDTO.getId())
+                .map(petType -> {
+                    if (isPetTypeNamePresent(petTypeDTO.getName())) {
+                        throw new PetTypeNameAlreadyExistsException();
+                    } else {
+                        petType = petTypeMapper.mapToEntity(petTypeDTO);
+                        petTypeRepository.save(petType);
+                        log.info("Updated pet type: {}", petType);
+                    }
+                    return petTypeDTO;
+                }))
+                .orElse(Optional.empty());
+    }
+
+    public void deletePetType(Long id) {
+        petTypeRepository
+                .findById(id)
+                .ifPresent(petType -> {
+                    petTypeRepository.delete(petType);
+                    log.info("Deleted pet type: {}", petType);
+                });
     }
 }

@@ -13,4 +13,21 @@ $('document').ready(function () {
            $('#detailsPetTypeModal').modal();
        })
     });
+
+    $('.table #petTypeEditButton').on('click', function (event) {
+        event.preventDefault();
+        let href = $(this).attr('href');
+        $.get(href, function (petTypeDTO) {
+            $('#editPetTypeId').val(petTypeDTO.id);
+            $('#editPetTypeName').val(petTypeDTO.name);
+            $('#editPetTypeModal').modal();
+        })
+    });
+
+    $('.table #petTypeDeleteButton').on('click', function (event) {
+        event.preventDefault();
+        let href = $(this).attr('href');
+        $('#deletePetTypeModal #confirmDeleteButton').attr('href', href);
+        $('#deletePetTypeModal').modal();
+    });
 });
