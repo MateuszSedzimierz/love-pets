@@ -26,7 +26,7 @@ public class PetDTO {
 
     private UserDTO ownerDTO;
 
-    private AddressDTO address;
+    private AddressDTO addressDTO;
 
     private String createdBy;
 
@@ -48,7 +48,7 @@ public class PetDTO {
         this.imageUrl = pet.getImageUrl();
         this.petDetailsDTO = new PetDetailsDTO(pet.getPetDetails());
         this.ownerDTO = new UserDTO(pet.getOwner());
-        this.address = new AddressDTO(pet.getAddress());
+        this.addressDTO = new AddressDTO(pet.getAddress());
         this.createdBy = pet.getCreatedBy();
         this.createdDate = pet.getCreatedDate();
         this.lastModifiedBy = pet.getLastModifiedBy();
@@ -115,20 +115,16 @@ public class PetDTO {
         return ownerDTO;
     }
 
-    public void setOwner(UserDTO ownerDTO) {
-        this.ownerDTO = ownerDTO;
-    }
-
-    public AddressDTO getAddress() {
-        return address;
-    }
-
-    public void setAddress(AddressDTO address) {
-        this.address = address;
-    }
-
     public void setOwnerDTO(UserDTO ownerDTO) {
         this.ownerDTO = ownerDTO;
+    }
+
+    public AddressDTO getAddressDTO() {
+        return addressDTO;
+    }
+
+    public void setAddressDTO(AddressDTO addressDTO) {
+        this.addressDTO = addressDTO;
     }
 
     public String getCreatedBy() {
@@ -174,7 +170,7 @@ public class PetDTO {
                 ", imageUrl: '" + imageUrl + '\'' +
                 ", petDetailsDTO: " + petDetailsDTO +
                 ", ownerDTO: " + ownerDTO +
-                ", address: " + address +
+                ", addressDTO: " + addressDTO +
                 ", createdBy: '" + createdBy + '\'' +
                 ", createdDate: " + createdDate +
                 ", lastModifiedBy: '" + lastModifiedBy + '\'' +

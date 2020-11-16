@@ -83,6 +83,15 @@ public class AddressDTO {
         this.streetAddress = streetAddress;
     }
 
+    public AddressDTO clone() {
+        AddressDTO addressDTO = new AddressDTO();
+        addressDTO.setCountry(country);
+        addressDTO.setCity(city);
+        addressDTO.setState(state);
+        addressDTO.setZipCode(zipCode);
+        addressDTO.setStreetAddress(streetAddress);
+        return addressDTO;
+    }
     @Override
     public String toString() {
         return "AddressDTO {" +

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>LOVE &#x1F43E; PETS</title>
+
+  <!-- CSS -->
+  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <link th:href="@{/css/modern-business.css}" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav th:replace="fragments/navigation :: navigation"></nav>
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <!-- Page Heading/Breadcrumbs -->
+    <h1 class="mt-4 mb-3">Add new pet</h1>
+
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a th:href="@{/}">Home</a>
+      </li>
+      <li class="breadcrumb-item active">New</li>
+    </ol>
+
+    <div class="row">
+      <div class="col-lg-8 mb-4">
+        <h3 class="mb-4">Please add some information about pet</h3>
+
+        <!-- Pet Form -->
+        <form enctype="multipart/form-data" th:action="@{/pets/save}" th:object="${petDTO}" method="post">
+          <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" th:field="*{name}" class="form-control" id="name" required>
+          </div>
+
+          <div class="form-group">
+            <label>Pet Type:</label>
+            <select class="form-control" th:field="*{petTypeDTO}" name="petTypeDTO" required>
+                <option th:each="petType : ${petTypes}" th:value="${petType.id}" th:text="${petType.name}" ></option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Gender:</label>
+            <div>
+              <div th:each="genderType : ${T(pl.sedzimierz.lovepets.model.GenderType).values()}" class="custom-control custom-radio custom-control-inline">
+                  <input class="custom-control-input" type="radio" th:field="*{petDetailsDTO.gender}" th:id="${genderType}" th:value="${genderType}" required>
+                  <label class="custom-control-label" th:for="${genderType}" th:text="${genderType.displayValue}"></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Size:</label>
+            <div>
+              <div th:each="petSize : ${T(pl.sedzimierz.lovepets.model.PetSize).values()}" class="custom-control custom-radio custom-control-inline">
+                <input type="radio" th:field="*{petDetailsDTO.size}" class="custom-control-input" th:id="${petSize}" th:value="${petSize}" required>
+                <label class="custom-control-label" th:for="${petSize}" th:text="${petSize.displayValue}"></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Age:</label>
+            <div>
+              <div th:each="petAge : ${T(pl.sedzimierz.lovepets.model.PetAge).values()}" class="custom-control custom-radio custom-control-inline">
+                <input type="radio" th:field="*{petDetailsDTO.age}" class="custom-control-input" th:id="${petAge}" th:value="${petAge}" required>
+                <label class="custom-control-label" th:for="${petAge}" th:text="${petAge.displayValue}"></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Other:</label>
+            <div class="form-check">
+                <input type="checkbox" th:field="*{petDetailsDTO.sterilized}" class="form-check-input" id="sterilized">
+                <label class="form-check-label" for="sterilized">Sterilized</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Description:</label>
+            <textarea th:field="*{petDetailsDTO.description}" rows="6" cols="100" class="form-control" id="description" required  maxlength="999" style="resize:none"></textarea>
+          </div>
+
+          <!-- Image -->
+          <div class="form-group">
+            <label for="inputImage">Image:</label>
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" id="inputImage" size="" th:name="petImage" accept="image/jpeg, image/png">
+              <label class="custom-file-label" for="inputImage"><span th:text="${#strings.isEmpty(petDTO.imageUrl)} ? 'Choose an image' : ${#strings.arraySplit(petDTO.imageUrl, '/')[1]}"></span></label>
+            </div>
+          </div>
+
+          <hr class="line">
+          <h3>Information about address</h3>
+
+          <div class="form-group">
+            <label for="country">Country:</label>
+            <input type="text" th:field="*{addressDTO.country}" class="form-control" id="country" required>
+          </div>
+
+          <div class="form-group">
+            <label for="state">State:</label>
+            <input type="text" th:field="*{addressDTO.state}" class="form-control" id="state">
+          </div>
+
+          <div class="form-group">
+            <label for="city">City:</label>
+            <input type="text" th:field="*{addressDTO.city}" class="form-control" id="city" required>
+          </div>
+
+          <div class="form-group">
+            <label for="zipCode">Zip Code:</label>
+            <input type="text" th:field="*{addressDTO.zipCode}" class="form-control" id="zipCode">
+          </div>
+
+          <div class="form-group">
+            <label for="streetAddress">Street Address:</label>
+            <input type="text" th:field="*{addressDTO.streetAddress}" class="form-control" id="streetAddress">
+          </div>
+
+          <input type="hidden" th:field="*{id}">
+          <input type="hidden" th:field="*{petDetailsDTO.id}">
+          <input type="hidden" th:field="*{imageUrl}">
+          <input type="hidden" th:value="*{ownerDTO.id}" name="ownerDTO">
+          <input type="hidden" th:field="*{addressDTO.id}">
+          <input type="hidden" th:field="*{adopted}">
+          <input type="hidden" th:field="*{adoptionDate}">
+
+          <button type="submit" class="btn btn-primary">Save</button>
+          <a class="btn btn-secondary" href="javascript:history.back()">Cancel</a>
+        </form>
+        <!-- /.Pet Form -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark" th:replace="fragments/footer :: footer"></footer>
+
+  <!-- Scripts -->
+  <script th:src="@{/js/jquery-3.5.1.min.js}"></script>
+  <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+  <!-- Input file name -->
+  <script type="application/javascript">
+    $('#inputImage').on('change',function(){
+      // Get the file name
+      var fileName = $(this).val().replace('C:\\fakepath\\', "");
+      // Replace the "Choose a file" label
+      $(this).next('.custom-file-label').html(fileName);
+    })
+  </script>
+
+</body>
+
+</html>

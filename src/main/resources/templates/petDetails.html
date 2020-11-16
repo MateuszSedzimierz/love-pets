@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>LOVE &#x1F43E; PETS</title>
+
+  <!-- CSS -->
+  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <link th:href="@{/css/modern-business.css}" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav th:replace="fragments/navigation :: navigation"></nav>
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <!-- Page Heading/Breadcrumbs -->
+    <h1 class="mt-4 mb-3">About pet</h1>
+
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a th:href="@{/}">Home</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a th:href="@{/pets}">Pets</a>
+      </li>
+      <li class="breadcrumb-item active">Details</li>
+    </ol>
+
+    <!-- Pet Details Row -->
+    <div class="row">
+
+      <div class="col-md-8">
+        <img class="img-fluid"  th:src="@{${'/pets-images/' + (#strings.isEmpty(petDTO.imageUrl) ? 'default/ImageNotFound' : petDTO.imageUrl)}}" >
+      </div>
+
+      <div class="col-md-4">
+        <h3 class="my-3">Description</h3>
+        <p th:text="${petDTO.petDetailsDTO.description}"></p>
+
+        <h3 class="my-3">Details</h3>
+        <ul>
+          <li><b>Name: </b><span th:text="${petDTO.name}"></span></li>
+          <li><b>Pet Type: </b><span th:text="${petDTO.petTypeDTO.name}"></span></li>
+          <li><b>Gender: </b><span th:text="${petDTO.petDetailsDTO.gender.displayValue}"></span></li>
+          <li><b>Size: </b><span th:text="${petDTO.petDetailsDTO.size.displayValue}"></span></li>
+          <li><b>Age: </b><span th:text="${petDTO.petDetailsDTO.age.displayValue}"></span></li>
+          <li><b>Sterilized: </b><span th:text="${petDTO.petDetailsDTO.sterilized} ? 'Yes' : 'No'"></span></li>
+          <li><b>City: </b><span th:text="${petDTO.addressDTO.city}"></span></li>
+          <li><b>Created Date: </b><span th:text="${#temporals.format(petDTO.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></span></li>
+        </ul>
+
+        <!-- Owner -->
+        <div class="card" style="margin-bottom: 30px;">
+          <div class="card-body">
+            <h4 class="card-title">Contact</h4>
+            <div class="card-text">
+              <hr class="card-line">
+              <b>First Name: </b><span th:text="${petDTO.ownerDTO.firstName}"></span>
+              <hr class="card-line">
+              <b>Last Name: </b><span th:text="${petDTO.ownerDTO.lastName}"></span>
+              <hr class="card-line">
+              <b>Email: </b><span th:text="${petDTO.ownerDTO.email}"></span>
+              <hr class="card-line">
+              <b>Phone Number: </b><span th:text="${petDTO.ownerDTO.phoneNumber}"></span>
+              <hr class="card-line">
+              <button class="btn btn-info btn-block" data-toggle="modal" data-target="#addressDetailsModal">Check address details</button>
+            </div>
+          </div>
+        </div>
+        <!-- Owner End -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark" th:replace="fragments/footer :: footer"></footer>
+
+  <!-- Address Details Modal -->
+  <div class="modal fade" id="addressDetailsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Address Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <b>Country:</b><p th:text="${petDTO.addressDTO.country}"></p>
+
+          <div th:if="${not #strings.isEmpty(petDTO.addressDTO.state)}">
+            <b>State:</b><p th:text="${petDTO.addressDTO.state}"></p>
+          </div>
+
+          <b>City:</b><p th:text="${petDTO.addressDTO.city}"></p>
+
+          <div th:if="${not #strings.isEmpty(petDTO.addressDTO.zipCode)}">
+            <b>Zip Code:</b><p th:text="${petDTO.addressDTO.zipCode}"></p>
+          </div>
+
+          <div th:if="${not #strings.isEmpty(petDTO.addressDTO.streetAddress)}">
+            <b>Street Address:</b><p th:text="${petDTO.addressDTO.streetAddress}"></p>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Address Details Modal End -->
+
+  <!-- Scripts -->
+  <script th:src="@{/js/jquery-3.5.1.min.js}"></script>
+  <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+
+</html>

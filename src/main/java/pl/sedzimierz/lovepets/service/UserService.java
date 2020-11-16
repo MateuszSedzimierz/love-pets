@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.sedzimierz.lovepets.model.Authority;
 import pl.sedzimierz.lovepets.model.User;
 import pl.sedzimierz.lovepets.repository.AuthorityRepository;
@@ -15,6 +16,7 @@ import pl.sedzimierz.lovepets.service.exception.LoginAlreadyUsedException;
 import pl.sedzimierz.lovepets.service.mapper.UserMapper;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -34,6 +36,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     public void createUser(UserDTO userDTO, String password) {
         checkIfLoginAndEmailUsed(userDTO.getLogin(), userDTO.getEmail());
 
@@ -49,7 +52,7 @@ public class UserService {
     }
 
     private void checkIfLoginAndEmailUsed(String login, String email) {
-        if(userRepository.findOneByLogin(login).isPresent()) {
+        if (userRepository.findOneByLogin(login).isPresent()) {
             log.debug("Login '{}' exists in database", login);
             throw new LoginAlreadyUsedException();
         }
@@ -58,5 +61,19 @@ public class UserService {
             log.debug("Email '{}' exists in database", email);
             throw new EmailAlreadyUsedException();
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<UserDTO> getUserByLogin(String login) {
+        return userRepository
+                .findOneByLogin(login)
+                .map(UserDTO::new);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<UserDTO> getUserById(Long id) {
+        return userRepository
+                .findById(id)
+                .map(UserDTO::new);
     }
 }

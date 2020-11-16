@@ -151,7 +151,6 @@ public class User extends AbstractAuditingEntity {
                 ", email: '" + email + '\'' +
                 ", phoneNumber: '" + phoneNumber + '\'' +
                 ", address: " + address +
-                ", petsNumber: " + pets.size() +
                 ", authorities: " + authorities +
                 '}';
     }

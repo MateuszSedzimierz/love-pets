@@ -83,16 +83,6 @@ public class Address {
         this.streetAddress = streetAddress;
     }
 
-    public Address clone() {
-        Address address = new Address();
-        address.setCountry(country);
-        address.setCity(city);
-        address.setState(state);
-        address.setZipCode(zipCode);
-        address.setStreetAddress(streetAddress);
-        return address;
-    }
-
     @Override
     public String toString() {
         return "Address {" +
