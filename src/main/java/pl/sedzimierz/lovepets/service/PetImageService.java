@@ -32,7 +32,7 @@ public class PetImageService {
             return imageUrl;
         } catch (IOException e) {
             log.debug("Error while saving pet image : {}", e.getMessage());
-            return "default/ImageNotFound";
+            return "/img/imageNotFound.png";
         }
     }
 

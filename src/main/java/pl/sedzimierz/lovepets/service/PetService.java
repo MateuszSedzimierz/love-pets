@@ -10,7 +10,9 @@ import pl.sedzimierz.lovepets.repository.PetRepository;
 import pl.sedzimierz.lovepets.service.dto.PetDTO;
 import pl.sedzimierz.lovepets.service.mapper.PetMapper;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PetService {
@@ -25,6 +27,15 @@ public class PetService {
         this.petRepository = petRepository;
         this.petMapper = petMapper;
         this.petImageService = petImageService;
+    }
+
+    @Transactional(readOnly = true)
+    public List<PetDTO> getNotAdoptedPets() {
+        return petRepository
+                .findAllByAdoptedFalse()
+                .stream()
+                .map(PetDTO::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)

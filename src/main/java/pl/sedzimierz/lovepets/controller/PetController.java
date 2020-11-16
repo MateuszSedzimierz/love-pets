@@ -32,6 +32,12 @@ public class PetController {
         this.petTypeService = petTypeService;
     }
 
+    @GetMapping
+    public String getNotAdoptedPets(Model model) {
+        model.addAttribute("pets", petService.getNotAdoptedPets());
+        return "pets";
+    }
+
     @GetMapping("/{petId}/details")
     public String getPetDetails(@PathVariable Long petId, Model model) {
         return petService.getPetById(petId)

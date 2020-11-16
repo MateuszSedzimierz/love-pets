@@ -35,7 +35,7 @@
     <div class="row">
 
       <div class="col-md-8">
-        <img class="img-fluid"  th:src="@{${'/pets-images/' + (#strings.isEmpty(petDTO.imageUrl) ? 'default/ImageNotFound' : petDTO.imageUrl)}}" >
+        <img class="img-fluid" th:src="@{${#strings.isEmpty(petDTO.imageUrl) ? '/img/imageNotFound.png' : '/pets-images/' + petDTO.imageUrl}}" alt="Pet Image">
       </div>
 
       <div class="col-md-4">
