@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>LOVE &#x1F43E; PETS</title>
+
+  <!-- CSS -->
+  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <link th:href="@{/css/modern-business.css}" rel="stylesheet">
+  <link th:href="@{/css/fontello.css}" rel="stylesheet">
+  <link th:href="@{/css/fontello-ie7.css}" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav th:replace="fragments/navigation :: navigation"></nav>
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <!-- Page Heading/Breadcrumbs -->
+    <h1 class="mt-4 mb-3">Pets Management</h1>
+
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a th:href="@{/}">Home</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a th:href="@{/pets}">Pets</a>
+      </li>
+      <li class="breadcrumb-item active">Management</li>
+    </ol>
+
+    <a type="button" class="btn btn-info mb-3" th:href="@{/pets/new}" title="Add new pet"><i class="icon-plus-circled"></i></a>
+
+    <div th:if="${successMessage}" class="alert alert-success col-xs-offset-1 col-xs-10">
+      <span th:text="${successMessage}"></span>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger col-xs-offset-1 col-xs-10">
+      <span th:text="${errorMessage}"></span>
+    </div>
+
+    <!-- Pets Table -->
+    <div class="table-responsive-xl text-nowrap">
+      <table id="petsTable" class="table table-bordered table-striped ">
+        <thead class="thead-light">
+          <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Gender</th>
+            <th>Age</th>
+            <th>Size</th>
+            <th>City</th>
+            <th>Adopted</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="pet : ${pets}">
+          <td class="align-middle" th:text="${pet.id}"></td>
+          <td class="align-middle" th:text="${pet.name}"></td>
+          <td class="align-middle" th:text="${pet.petTypeDTO.name}"></td>
+          <td class="align-middle" th:text="${pet.petDetailsDTO.gender.displayValue}"></td>
+          <td class="align-middle" th:text="${pet.petDetailsDTO.age.displayValue}"></td>
+          <td class="align-middle" th:text="${pet.petDetailsDTO.size.displayValue}"></td>
+          <td class="align-middle" th:text="${pet.addressDTO.city}"></td>
+          <td class="align-middle">
+            <form th:id="${'isAdoptedForm_' + pet.id}" th:action="@{${'/pets/' + pet.id + '/adoption'}}">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" th:id="${'switch_' + pet.id}" th:checked="${pet.adopted}" onclick="toggleAdoption(this)">
+                <label class="custom-control-label" th:for="${'switch_' + pet.id}"></label>
+              </div>
+            </form>
+          </td>
+          <td class="align-middle">
+            <div class="btn-group">
+              <a th:href="@{${'/pets/' + pet.id}}" class="btn btn-success" id="petDetailsButton" title="Details"><i class="icon-info"></i></a>
+              <a th:href="@{${'/pets/' + pet.id + '/edit'}}" class="btn btn-primary" id="petUpdateButton" title="Update"><i class="icon-cog"></i></a>
+              <a th:href="@{${'/pets/' + pet.id + '/delete'}}" class="btn btn-danger" id="petDeleteButton" title="Delete"><i class="icon-trash"></i></a>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- /.Pets Table -->
+  </div>
+
+  <!-- Footer -->
+  <footer th:replace="fragments/footer :: footer"></footer>
+
+  <!-- Details Pet Modal -->
+  <div class="modal fade" id="detailsPetModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Pet Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="petId" class="col-form-label"> Id:</label>
+            <input type="text" class="form-control" id="petId" disabled>
+          </div>
+
+          <div class="form-group">
+            <label for="petImage" class="col-form-label"> Image:</label>
+            <img id="petImage" class="img-fluid rounded">
+          </div>
+
+          <div class="form-group">
+            <label for="petName" class="col-form-label"> Name:</label>
+            <input type="text" class="form-control" id="petName" disabled>
+          </div>
+
+          <div class="form-group">
+            <label for="petType" class="col-form-label"> Type:</label>
+            <input type="text" class="form-control" id="petType" disabled>
+          </div>
+
+          <div class="form-group">
+            <label for="petGender" class="col-form-label"> Gender:</label>
+            <input type="text" class="form-control" id="petGender" disabled>
+          </div>
+
+          <div class="form-group">
+            <label for="petAge" class="col-form-label"> Age:</label>
+            <input type="text" class="form-control" id="petAge" disabled>
+          </div>
+
+          <div class="form-group">
+            <label for="petSize" class="col-form-label"> Size:</label>
+            <input type="text" class="form-control" id="petSize" disabled>
+          </div>
+
+          <div class="form-group">
+            <label for="petDescription" class="col-form-label"> Description:</label>
+            <textarea class="form-control" rows="6" id="petDescription" disabled></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="sterilized" class="col-form-label"> Sterilized:</label>
+            <input type="text" class="form-control" id="sterilized" disabled>
+          </div>
+
+          <div class="form-group">
+            <label for="adopted" class="col-form-label"> Adopted:</label>
+            <input type="text" class="form-control" id="adopted" disabled>
+          </div>
+
+          <div class="form-group">
+            <label for="petAddress" class="col-form-label"> Address:</label>
+            <textarea class="form-control" id="petAddress" cols="60" disabled></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="createdDate" class="col-form-label"> Created date:</label>
+            <input type="text" class="form-control" id="createdDate" disabled>
+          </div>
+
+          <div class="form-group">
+            <label for="lastModifiedDate" class="col-form-label"> Last modified date:</label>
+            <input type="text" class="form-control" id="lastModifiedDate" disabled>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.Details Pet Modal -->
+
+  <!-- Delete Pet Modal -->
+  <div class="modal fade" id="deletePetModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm delete</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this pet?</p>
+        </div>
+        <div class="modal-footer">
+          <a href="" class="btn btn-primary" id="confirmDeleteButton">Yes, delete</a>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.Delete Pet Modal -->
+
+  <!-- Scripts -->
+  <script th:src="@{/js/jquery-3.5.1.min.js}"></script>
+  <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+  <script th:src="@{/js/functions.js}"></script>
+  <script th:src="@{/js/pets.js}"></script>
+</body>
+
+</html>

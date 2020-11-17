@@ -1,12 +1,16 @@
 package pl.sedzimierz.lovepets.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.sedzimierz.lovepets.controller.editor.PetTypeEditor;
 import pl.sedzimierz.lovepets.controller.editor.UserEditor;
+import pl.sedzimierz.lovepets.security.AuthoritiesConstants;
 import pl.sedzimierz.lovepets.security.SecurityUtils;
 import pl.sedzimierz.lovepets.service.PetService;
 import pl.sedzimierz.lovepets.service.PetTypeService;
@@ -14,8 +18,11 @@ import pl.sedzimierz.lovepets.service.UserService;
 import pl.sedzimierz.lovepets.service.dto.PetDTO;
 import pl.sedzimierz.lovepets.service.dto.PetTypeDTO;
 import pl.sedzimierz.lovepets.service.dto.UserDTO;
+import pl.sedzimierz.lovepets.service.exception.PetDeleteNotAllowedException;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -80,6 +87,46 @@ public class PetController {
             return "petForm";
         }
         return "notFound";
+    }
+
+    @GetMapping("/management")
+    public String getPetsToManagement(Model model) {
+        List<PetDTO> pets;
+        if (SecurityUtils.hasCurrentUserAuthority(AuthoritiesConstants.ADMIN)) {
+            pets = petService.getAllPets();
+        } else {
+            pets = SecurityUtils
+                    .getCurrentUserLogin()
+                    .map(petService::getPetsByOwnerLogin)
+                    .orElse(new ArrayList<>());
+        }
+        model.addAttribute("pets", pets);
+        return "petsManagement";
+    }
+
+    @GetMapping("/{petId}")
+    public ResponseEntity<PetDTO> getPetById(@PathVariable Long petId) {
+        return petService
+                .getPetById(petId)
+                .map(petDTO -> new ResponseEntity<>(petDTO, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/{petId}/delete")
+    public String deletePet(@PathVariable Long petId, RedirectAttributes redirectAttributes) {
+        try {
+            petService.deletePetById(petId);
+            redirectAttributes.addFlashAttribute("successMessage", "Deleted pet!");
+        } catch (PetDeleteNotAllowedException exc) {
+            redirectAttributes.addFlashAttribute("errorMessage", exc.getMessage());
+        }
+        return "redirect:/pets/management";
+    }
+
+    @GetMapping("/{petId}/adoption")
+    public String updateAdoptionStatus(@PathVariable Long petId, @RequestParam boolean adopted) {
+        petService.setAdopted(petId, adopted);
+        return "redirect:/pets/management";
     }
 
     @InitBinder

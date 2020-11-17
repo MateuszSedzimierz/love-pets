@@ -10,4 +10,6 @@ import java.util.List;
 public interface PetRepository extends JpaRepository<Pet, Long> {
 
     List<Pet> findAllByAdoptedFalse();
+
+    List<Pet> findAllByOwnerLogin(String login);
 }
