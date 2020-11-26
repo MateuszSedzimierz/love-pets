@@ -38,7 +38,8 @@ public class UserService {
 
     @Transactional
     public void createUser(UserDTO userDTO, String password) {
-        checkIfLoginAndEmailUsed(userDTO.getLogin(), userDTO.getEmail());
+        checkIfLoginExist(userDTO.getLogin());
+        checkIfEmailExist(userDTO.getEmail());
 
         User user = userMapper.mapToEntity(userDTO);
         user.setPassword(passwordEncoder.encode(password));
@@ -51,12 +52,14 @@ public class UserService {
         log.info("Created user: {}", user);
     }
 
-    private void checkIfLoginAndEmailUsed(String login, String email) {
+    private void checkIfLoginExist(String login) {
         if (userRepository.findOneByLogin(login).isPresent()) {
             log.debug("Login '{}' exists in database", login);
             throw new LoginAlreadyUsedException();
         }
+    }
 
+    private void checkIfEmailExist(String email) {
         if (userRepository.findOneByEmail(email).isPresent()) {
             log.debug("Email '{}' exists in database", email);
             throw new EmailAlreadyUsedException();
@@ -75,5 +78,23 @@ public class UserService {
         return userRepository
                 .findById(id)
                 .map(UserDTO::new);
+    }
+
+    @Transactional
+    public Optional<UserDTO> updateUser(UserDTO userDTO) {
+        return Optional.of(userRepository
+                    .findById(userDTO.getId())
+                    .map(user -> {
+                        if (!user.getEmail().equals(userDTO.getEmail())) {
+                            checkIfEmailExist(userDTO.getEmail());
+                        }
+                        User updatedUser = userMapper.mapToEntity(userDTO);
+                        updatedUser.setPassword(user.getPassword());
+                        updatedUser.setAuthorities(user.getAuthorities());
+                        updatedUser.setPets(user.getPets());
+                        userRepository.save(updatedUser);
+                        log.info("Updated user: {}", updatedUser);
+                        return new UserDTO(updatedUser);
+                    }).orElse(new UserDTO()));
     }
 }
