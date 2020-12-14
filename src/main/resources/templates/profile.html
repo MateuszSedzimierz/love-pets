@@ -19,7 +19,7 @@
   <div class="container">
 
     <!-- Page Heading/Breadcrumbs -->
-    <h1 class="mt-4 mb-3">Create new account</h1>
+    <h1 class="mt-4 mb-3">User profile</h1>
 
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
@@ -30,18 +30,18 @@
 
     <div class="row">
       <div class="col-lg-6 mb-4">
-        <h3 class="mt-2 mb-4">Profile</h3>
+        <h3 class="mt-2 mb-4">Details</h3>
 
         <!-- User Form -->
         <form th:action="@{/users/update}" th:object="${user}" method="post">
 
             <!-- Check for update information -->
-            <div th:if="${updateSuccess}" class="alert alert-success col-xs-offset-1 col-xs-10">
-                <span th:text="${updateSuccess}"></span>
+            <div th:if="${successMessage}" class="alert alert-success col-xs-offset-1 col-xs-10">
+                <span th:text="${successMessage}"></span>
             </div>
 
-            <div th:if="${updateError}" class="alert alert-danger col-xs-offset-1 col-xs-10">
-                <span th:text="${updateError}"></span>
+            <div th:if="${errorMessage}" class="alert alert-danger col-xs-offset-1 col-xs-10">
+                <span th:text="${errorMessage}"></span>
             </div>
 
             <input type="hidden" th:field="*{id}">

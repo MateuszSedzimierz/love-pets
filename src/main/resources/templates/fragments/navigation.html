@@ -52,6 +52,7 @@
               <a class="dropdown-item" th:href="@{/pets/new}">Add New Pet</a>
               <a class="dropdown-item" th:href="@{/pets/management}">Pets Management</a>
               <a sec:authorize="hasAuthority('ROLE_ADMIN')" class="dropdown-item" th:href="@{/pet-types}">Pet Types Management</a>
+              <a sec:authorize="hasAuthority('ROLE_ADMIN')" class="dropdown-item" th:href="@{/users}">Users Management</a>
             </div>
           </li>
 

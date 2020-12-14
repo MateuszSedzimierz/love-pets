@@ -1,10 +1,10 @@
 package pl.sedzimierz.lovepets.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.sedzimierz.lovepets.security.AuthoritiesConstants;
 import pl.sedzimierz.lovepets.security.SecurityUtils;
@@ -15,6 +15,7 @@ import pl.sedzimierz.lovepets.service.exception.LoginAlreadyUsedException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/users")
@@ -24,6 +25,20 @@ public class UserController {
 
     public UserController(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping
+    public String getUsers(Model model) {
+        model.addAttribute("users", userService.getUsers());
+        return "usersManagement";
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long userId) {
+        Optional<UserDTO> existingUser = userService.getUserById(userId);
+        return existingUser
+                .map(user -> new ResponseEntity<>(user, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/new")
@@ -58,9 +73,9 @@ public class UserController {
 
         try {
             userService.updateUser(userDTO);
-            redirectAttributes.addFlashAttribute("updateSuccess", "Update successful!");
+            redirectAttributes.addFlashAttribute("successMessage", "Update successful!");
         } catch (EmailAlreadyUsedException exc) {
-            redirectAttributes.addFlashAttribute("updateError", exc.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", exc.getMessage());
         }
 
         String previousPage = request.getHeader("Referer");
@@ -74,5 +89,22 @@ public class UserController {
         return SecurityUtils.getCurrentUserLogin()
                 .map(login -> login.equals(updatedUserLogin))
                 .orElse(false);
+    }
+
+    @GetMapping("/{userId}/delete")
+    public String deleteUser(@PathVariable Long userId, RedirectAttributes redirectAttributes) {
+        try {
+            userService.deleteUserById(userId);
+            redirectAttributes.addFlashAttribute("successMessage", "Deleted user!");
+        } catch (Exception exc) {
+            redirectAttributes.addFlashAttribute("errorMessage", exc.getMessage());
+        }
+        return "redirect:/users";
+    }
+
+    @GetMapping("/{userId}/admin")
+    public String changeAdminAuthority(@PathVariable Long userId, @RequestParam boolean isAdmin) {
+        userService.setAdminAuthority(userId, isAdmin);
+        return "redirect:/users";
     }
 }

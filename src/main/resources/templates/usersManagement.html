@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <title>LOVE &#x1F43E; PETS</title>
+
+  <!-- CSS -->
+  <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+  <link th:href="@{/css/modern-business.css}" rel="stylesheet">
+  <link th:href="@{/css/fontello.css}" rel="stylesheet">
+  <link th:href="@{/css/fontello-ie7.css}" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav th:replace="fragments/navigation :: navigation"></nav>
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <!-- Page Heading/Breadcrumbs -->
+    <h1 class="mt-4 mb-3">Users Management</h1>
+
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a th:href="@{/}">Home</a>
+      </li>
+      <li class="breadcrumb-item active">Users Management</li>
+    </ol>
+
+    <div th:if="${successMessage}" class="alert alert-success col-xs-offset-1 col-xs-10">
+      <span th:text="${successMessage}"></span>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert alert-danger col-xs-offset-1 col-xs-10">
+      <span th:text="${errorMessage}"></span>
+    </div>
+
+    <!-- Users Table -->
+    <div class="table-responsive-xl text-nowrap">
+      <table id="usersTable" class="table table-bordered table-striped ">
+        <thead class="thead-light">
+          <tr>
+            <th>Id</th>
+            <th>Login</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Created</th>
+            <th>Admin</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr th:each="user : ${users}" th:if="${user.login != #authentication.getName()}">
+            <td class="align-middle" th:text="${user.id}"></td>
+            <td class="align-middle" th:text="${user.login}"></td>
+            <td class="align-middle" th:text="${user.firstName + ' ' + user.lastName}"></td>
+            <td class="align-middle" th:text="${user.email}"></td>
+            <td class="align-middle" th:text="${user.phoneNumber}"></td>
+            <td class="align-middle">
+              <button id="addressDetailsButton" class="btn btn-success btn-sm" th:href="@{${'/addresses/' + user.addressDTO.id}}" title="Check address"><i class="icon-info"></i></button>
+            </td>
+            <td class="align-middle" th:text="${#temporals.format(user.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td class="align-middle">
+              <form th:id="${'isAdminForm_' + user.id}" th:action="@{${'/users/' + user.id + '/admin'}}">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" th:id="${'switch_' + user.id}" th:checked="${#lists.contains(user.authorities, 'ROLE_ADMIN')}" onclick="toggleAdminSwitch(this)">
+                  <label class="custom-control-label" th:for="${'switch_' + user.id}"></label>
+                </div>
+              </form>
+            </td>
+            <td class="align-middle">
+              <div class="btn-group">
+                <button id="userEditButton" th:href="@{${'/users/' + user.id}}" class="btn btn-primary btn-sm" title="Update"><i class="icon-cog"></i></button>
+                <button id="userDeleteButton" th:href="@{${'/users/' + user.id + '/delete'}}" class="btn btn-danger btn-sm" title="Delete"><i class="icon-trash"></i></button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- /.Users Table -->
+  </div>
+
+  <!-- Footer -->
+  <footer th:replace="fragments/footer :: footer"></footer>
+
+  <!-- Address Details Modal -->
+  <div class="modal fade" id="addressDetailsModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Address Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <b>Country:</b><p id="addressCountry"></p>
+          <div id="addressState"></div>
+          <b>City:</b><p id="addressCity"></p>
+          <div id="addressZipCode"></div>
+          <div id="addressStreet"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.Address Details Modal -->
+
+  <!-- User Edit Modal -->
+  <div class="modal fade" id="userEditModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <form th:action="@{/users/update}" method="post">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <h5 class="modal-title">User Edit</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="userId" class="col-form-label"> Id:</label>
+              <input type="text" class="form-control" id="userId" name="id" readonly>
+            </div>
+
+            <div class="form-group">
+              <label for="userLogin" class="col-form-label"> Login:</label>
+              <input type="text" class="form-control" id="userLogin" name="login" readonly>
+            </div>
+
+            <div class="form-group">
+              <label for="userFirstName" class="col-form-label"> First name:</label>
+              <input type="text" class="form-control" id="userFirstName" name="firstName">
+            </div>
+
+            <div class="form-group">
+              <label for="userLastName" class="col-form-label"> Last name:</label>
+              <input type="text" class="form-control" id="userLastName" name="lastName">
+            </div>
+
+            <div class="form-group">
+              <label for="userEmail" class="col-form-label"> Email:</label>
+              <input type="text" class="form-control" id="userEmail" name="email">
+            </div>
+
+            <div class="form-group">
+              <label for="userPhoneNumber" class="col-form-label"> Phone number:</label>
+              <input type="text" class="form-control" id="userPhoneNumber" name="phoneNumber">
+            </div>
+
+            <hr>
+
+            <div class="form-group">
+              <label for="addressId" class="col-form-label"> Address id:</label>
+              <input type="text" class="form-control" id="addressId" name="addressDTO.id" readonly>
+            </div>
+
+            <div class="form-group">
+              <label for="userCountry" class="col-form-label"> Country:</label>
+              <input type="text" class="form-control" id="userCountry" name="addressDTO.country">
+            </div>
+
+            <div class="form-group">
+              <label for="userState" class="col-form-label"> State:</label>
+              <input type="text" class="form-control" id="userState" name="addressDTO.state">
+            </div>
+
+            <div class="form-group">
+              <label for="userCity" class="col-form-label"> City:</label>
+              <input type="text" class="form-control" id="userCity" name="addressDTO.city">
+            </div>
+
+            <div class="form-group">
+              <label for="userZipCode" class="col-form-label"> Zip code:</label>
+              <input type="text" class="form-control" id="userZipCode" name="addressDTO.zipCode">
+            </div>
+
+            <div class="form-group">
+              <label for="userStreet" class="col-form-label"> Street address:</label>
+              <input type="text" class="form-control" id="userStreet" name="addressDTO.streetAddress">
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- /.User Edit Modal -->
+
+  <!-- User Delete Modal -->
+  <div class="modal fade" tabindex="-1" role="dialog" id="deleteModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm delete</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this user? It will also delete all information about pets and addresses.</p>
+        </div>
+        <div class="modal-footer">
+          <a href="" class="btn btn-primary" id="confirmDeleteButton">Yes, delete</a>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- /.User Delete Modal -->
+
+  <!-- Scripts -->
+  <script th:src="@{/js/jquery-3.5.1.min.js}"></script>
+  <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+  <script th:src="@{/js/functions.js}"></script>
+  <script th:src="@{/js/users.js}"></script>
+</body>
+
+</html>

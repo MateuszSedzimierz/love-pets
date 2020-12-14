@@ -16,8 +16,10 @@ import pl.sedzimierz.lovepets.service.exception.LoginAlreadyUsedException;
 import pl.sedzimierz.lovepets.service.mapper.UserMapper;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -34,6 +36,15 @@ public class UserService {
         this.authorityRepository = authorityRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserDTO> getUsers() {
+        return userRepository
+                .findAll()
+                .stream()
+                .map(UserDTO::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional
@@ -96,5 +107,39 @@ public class UserService {
                         log.info("Updated user: {}", updatedUser);
                         return new UserDTO(updatedUser);
                     }).orElse(new UserDTO()));
+    }
+
+    @Transactional
+    public void deleteUserById(Long id) {
+        userRepository
+                .findById(id)
+                .ifPresent(user -> {
+                    userRepository.delete(user);
+                    log.info("Deleted user: {}, pets: {}",
+                            user,
+                            user.getPets().stream()
+                                .map(pet -> pet.getId() + ": " + pet.getName())
+                                .toArray());
+                });
+    }
+
+    @Transactional
+    public void setAdminAuthority(Long id, boolean isAdmin) {
+        Optional<User> existingUser = userRepository.findById(id);
+        if (existingUser.isPresent()) {
+            User user = existingUser.get();
+            Set<Authority> authorities = user.getAuthorities();
+            if (isAdmin) {
+                authorityRepository
+                        .findByName(AuthoritiesConstants.ADMIN)
+                        .ifPresent(authorities::add);
+            } else {
+                authorityRepository
+                        .findByName(AuthoritiesConstants.ADMIN)
+                        .ifPresent(authorities::remove);
+            }
+            userRepository.save(user);
+            log.info("Updated user with id {}, authorities: {}", id, user.getAuthorities());
+        }
     }
 }

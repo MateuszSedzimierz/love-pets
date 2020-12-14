@@ -47,6 +47,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/pets", "/pets/*/details").permitAll()
             .antMatchers("/pets-images/**" ,"/img/**", "/css/**", "/js/**", "/font/**").permitAll()
             .antMatchers("/pet-types/**").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers("/users", "/users/**/delete", "/users/**/admin").hasAuthority(AuthoritiesConstants.ADMIN)
             .anyRequest().authenticated()
         .and()
             .formLogin()
