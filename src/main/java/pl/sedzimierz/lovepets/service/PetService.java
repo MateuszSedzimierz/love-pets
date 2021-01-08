@@ -127,4 +127,22 @@ public class PetService {
                     petRepository.save(pet);
                 });
     }
+
+    @Transactional(readOnly = true)
+    public List<PetDTO> getThreeLatestNotAdoptedPets() {
+        return petRepository
+                .findTop3ByAdoptedFalseOrderByCreatedDateDesc()
+                .stream()
+                .map(PetDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<PetDTO> getThreeRecentlyAdoptedPets() {
+        return petRepository
+                .findTop3ByAdoptedTrueOrderByAdoptionDateDesc()
+                .stream()
+                .map(PetDTO::new)
+                .collect(Collectors.toList());
+    }
 }

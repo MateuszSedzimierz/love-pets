@@ -35,8 +35,8 @@
         <a th:href="@{/pets/new}" class="btn btn-success my-sm-2 my-1" sec:authorize="isAuthenticated()">Add new</a>
         <!-- TODO: Pet search -->
         <form class="form-inline float-right">
-          <input class="form-control mr-sm-2 my-1" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-info my-sm-2 my-1" type="submit">Search</button>
+          <input class="form-control mr-sm-2 my-1" type="search" placeholder="Search" aria-label="Search" disabled>
+          <button class="btn btn-outline-info my-sm-2 my-1" type="submit" disabled>Search</button>
         </form>
       </div>
     </div>

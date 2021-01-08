@@ -87,11 +87,45 @@
             </div>
         </div>
 
-        <!-- TODO: Latest pets section -->
         <h2>Latest pets</h2>
+        <div class="row">
+            <div class="col-lg-4 col-sm-6 portfolio-item" th:each="pet : ${latestPets}">
+                <div class="card h-100">
+                    <a th:href="@{${'/pets/' + pet.id + '/details'}}"><img class="card-img-top" th:src="@{${#strings.isEmpty(pet.imageUrl) ? '/img/imageNotFound.png' : '/pets-images/' + pet.imageUrl}}" alt="Pet Image" width="350px" height="240px"></a>
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            <a th:href="@{${'/pets/' + pet.id + '/details'}}"><span th:text="${pet.name}"></span></a>
+                        </h4>
+                        <div class="card-text">
+                            <hr class="card-line">
+                            <p><b>Pet Type: </b><span th:text="${pet.petTypeDTO.name}"></span></p>
+                            <p><b>Gender: </b><span th:text="${pet.petDetailsDTO.gender.displayValue}"></span></p>
+                            <b>Location: </b><span th:text="${pet.addressDTO.country + ', ' + pet.addressDTO.city}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <!-- TODO: Recently adopted section -->
         <h2>Recently adopted</h2>
+        <div class="row">
+            <div class="col-lg-4 col-sm-6 portfolio-item" th:each="pet : ${adopted}">
+                <div class="card h-100">
+                    <img class="card-img-top" th:src="@{${#strings.isEmpty(pet.imageUrl) ? '/img/imageNotFound.png' : '/pets-images/' + pet.imageUrl}}" alt="Pet Image" width="350px" height="240px">
+                    <div class="card-body">
+                        <h4 class="card-title">
+                            <span th:text="${pet.name}"></span>
+                        </h4>
+                        <div class="card-text">
+                            <hr class="card-line">
+                            <p><b>Pet Type: </b><span th:text="${pet.petTypeDTO.name}"></span></p>
+                            <p><b>Gender: </b><span th:text="${pet.petDetailsDTO.gender.displayValue}"></span></p>
+                            <b>Location: </b><span th:text="${pet.addressDTO.country + ', ' + pet.addressDTO.city}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <hr>
 

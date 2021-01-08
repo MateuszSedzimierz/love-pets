@@ -11,5 +11,9 @@ public interface PetRepository extends JpaRepository<Pet, Long> {
 
     List<Pet> findAllByAdoptedFalse();
 
+    List<Pet> findTop3ByAdoptedFalseOrderByCreatedDateDesc();
+
+    List<Pet> findTop3ByAdoptedTrueOrderByAdoptionDateDesc();
+
     List<Pet> findAllByOwnerLogin(String login);
 }
