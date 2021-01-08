@@ -21,16 +21,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         this.userDetailsService = userDetailsService;
     }
 
-    // For testing
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService);
-
-        auth
-                .inMemoryAuthentication()
-                .withUser("admin")
-                .password(getPasswordEncoder().encode("admin"))
-                .authorities(AuthoritiesConstants.ADMIN);
     }
 
     @Override
