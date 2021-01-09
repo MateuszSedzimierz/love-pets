@@ -55,18 +55,17 @@ function formatAddress(address) {
     if (address.country.trim())
         formatted += 'Country: ' + address.country;
 
-    if (address.state.trim())
+    if (address.state && address.state.trim())
         formatted += ', State: ' + address.state;
 
     if (address.city.trim())
         formatted += ', City: ' + address.city;
 
-    if (address.zipCode.trim())
+    if (address.zipCode && address.zipCode.trim())
         formatted += ', Zip Code: ' + address.zipCode;
 
-    if (address.streetAddress.trim())
+    if (address.streetAddress && address.streetAddress.trim())
         formatted += ', Street: ' + address.streetAddress;
 
     return formatted;
 }
-

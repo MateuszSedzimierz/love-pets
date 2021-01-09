@@ -5,20 +5,26 @@ $('document').ready(function() {
         
         let href = $(this).attr('href');
         $.get(href, function (address) {
-           $('#addressCountry').append(address.country);
+           $('#addressCountry').text(address.country);
 
            if (address.state) {
-               $('#addressState').append("<b>State:</b><p>" + address.state + "</p>");
+               $('#addressState').html("<b>State:</b><p>" + address.state + "</p>");
+           } else {
+               $('#addressState').empty();
            }
 
-           $('#addressCity').append(address.city);
+           $('#addressCity').text(address.city);
 
            if (address.zipCode) {
-               $('#addressZipCode').append("<b>Zip Code:</b><p>" + address.zipCode + "</p>");
+               $('#addressZipCode').html("<b>Zip Code:</b><p>" + address.zipCode + "</p>");
+           } else {
+               $('#addressZipCode').empty();
            }
 
            if (address.streetAddress) {
-               $('#addressStreet').append("<b>Street Address:</b><p>" + address.streetAddress + "</p>");
+               $('#addressStreet').html("<b>Street Address:</b><p>" + address.streetAddress + "</p>");
+           } else {
+               $('#addressStreet').empty();
            }
         });
 
